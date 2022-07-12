@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+# clean up leaking environment
+unset GIT_DIR
+
+LIBREOFFICE_URL="https://libreoffice.soluzioniopen.com/stable/basic/LibreOffice-7.2.5-x86_64.AppImage"
+FILE_NAME="LibreOffice-7.2.5-x86_64.AppImage"
+
+BUILD_DIR=$1
+BUILDPACK_DIR="$(dirname $(dirname $0))"
+INSTALL_DIR="/app/libreoffice"
+TMP_DIR=$(mktemp -d)
+
+echo "-----> Downloading LibreOffice"
+curl --silent --show-error --fail -L -o "${TMP_DIR}/${FILE_NAME}" "${LIBREOFFICE_URL}"
+
+echo "-----> Extracting LibreOffice"
+mkdir -p "${BUILD_DIR}/libreoffice"
+
+if [[ "${BUILD_DIR}" != /app ]]; then
+  mkdir -p /app
+  ln -nsf "${BUILD_DIR}/libreoffice" "${INSTALL_DIR}"
+  ln -nsf "${BUILD_DIR}/vendor" /app/vendor
+fi
+
+cd $TMP_DIR
+chmod a+x $FILE_NAME
+./$FILE_NAME --appimage-extract
+mv squashfs-root libreoffice-7.2.5-x86_64
+cd ..
+
+cp -R $TMP_DIR/libreoffice-7.2.5-x86_64/usr $INSTALL_DIR
+cp -R $TMP_DIR/libreoffice-7.2.5-x86_64/opt $INSTALL_DIR
+
+rm -rf "${TMP_DIR}"
+
+echo "-----> Successfully extracted LibreOffice"
+
+echo "-----> Set .profile.d"
+
+PROFILE_PATH="$BUILD_DIR/.profile.d/libreoffice.sh"
+RUNTIME_INSTALL_PATH="\$HOME/libreoffice"
+mkdir -p $(dirname $PROFILE_PATH)
+INSTALLED_VERSION=$(ls $INSTALL_DIR/opt)
+echo "export PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION/program:\$PATH" >> $PROFILE_PATH
+echo "export OFFICE_PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION" >> $PROFILE_PATH
+
+echo "-----> LibreOffice installation done"
