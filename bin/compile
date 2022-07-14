@@ -48,7 +48,8 @@ mkdir -p $(dirname $PROFILE_PATH)
 INSTALLED_VERSION=$(ls $INSTALL_DIR/opt)
 echo "export PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION/program:\$PATH" >> $PROFILE_PATH
 echo "export OFFICE_PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION" >> $PROFILE_PATH
+echo "chmod 777 -R /app/libreoffice" >> $PROFILE_PATH
 
-chmod 777 -R /app/libreoffice
+chmod +x $BUILD_DIR/.profile.d/libreoffice.sh
 
 echo "-----> LibreOffice installation done"
