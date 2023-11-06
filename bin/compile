@@ -7,7 +7,7 @@ set -e
 # clean up leaking environment
 unset GIT_DIR
 
-LIBREOFFICE_URL="https://libreoffice.soluzioniopen.com/stable/basic/LibreOffice-7.2.5-x86_64.AppImage"
+LIBREOFFICE_URL="https://appimages.libreitalia.org/LibreOffice-fresh.basic-x86_64.AppImage"
 FILE_NAME="LibreOffice-7.2.5-x86_64.AppImage"
 
 BUILD_DIR=$1
