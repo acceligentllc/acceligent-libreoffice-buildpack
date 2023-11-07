@@ -7,7 +7,7 @@ set -e
 # clean up leaking environment
 unset GIT_DIR
 
-LIBREOFFICE_URL="https://appimages.libreitalia.org/LibreOffice-7.6.2.1.basic-x86_64.AppImage"
+LIBREOFFICE_URL="https://appimages.libreitalia.org/LibreOffice-7.3.2.2.basic-x86_64.AppImage"
 FILE_NAME="LibreOffice-7.2.5-x86_64.AppImage"
 
 BUILD_DIR=$1
@@ -30,11 +30,10 @@ fi
 cd $TMP_DIR
 chmod a+x $FILE_NAME
 ./$FILE_NAME --appimage-extract
-mv squashfs-root libreoffice-7.2.5-x86_64
 cd ..
 
-cp -R $TMP_DIR/libreoffice-7.2.5-x86_64/usr $INSTALL_DIR
-cp -R $TMP_DIR/libreoffice-7.2.5-x86_64/opt $INSTALL_DIR
+cp -R $TMP_DIR/squashfs-root/usr $INSTALL_DIR
+cp -R $TMP_DIR/squashfs-root/opt $INSTALL_DIR
 
 rm -rf "${TMP_DIR}"
 
