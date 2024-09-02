@@ -16,39 +16,41 @@ INSTALL_DIR="/app/libreoffice"
 TMP_DIR=$(mktemp -d)
 
 echo "-----> Downloading LibreOffice"
-curl --silent --show-error --fail -L -o "${TMP_DIR}/${FILE_NAME}" "${LIBREOFFICE_URL}"
 
-echo "-----> Extracting LibreOffice"
-mkdir -p "${BUILD_DIR}/libreoffice"
+aws s3 sync s3://libreoffice7342 ~/libreoffice/
+# curl --silent --show-error --fail -L -o "${TMP_DIR}/${FILE_NAME}" "${LIBREOFFICE_URL}"
 
-if [[ "${BUILD_DIR}" != /app ]]; then
-  mkdir -p /app
-  ln -nsf "${BUILD_DIR}/libreoffice" "${INSTALL_DIR}"
-  ln -nsf "${BUILD_DIR}/vendor" /app/vendor
-fi
+# echo "-----> Extracting LibreOffice"
+# mkdir -p "${BUILD_DIR}/libreoffice"
 
-cd $TMP_DIR
-chmod a+x $FILE_NAME
-./$FILE_NAME --appimage-extract
-cd ..
+# if [[ "${BUILD_DIR}" != /app ]]; then
+#   mkdir -p /app
+#   ln -nsf "${BUILD_DIR}/libreoffice" "${INSTALL_DIR}"
+#   ln -nsf "${BUILD_DIR}/vendor" /app/vendor
+# fi
 
-cp -R $TMP_DIR/squashfs-root/usr $INSTALL_DIR
-cp -R $TMP_DIR/squashfs-root/opt $INSTALL_DIR
+# cd $TMP_DIR
+# chmod a+x $FILE_NAME
+# ./$FILE_NAME --appimage-extract
+# cd ..
 
-rm -rf "${TMP_DIR}"
+# cp -R $TMP_DIR/squashfs-root/usr $INSTALL_DIR
+# cp -R $TMP_DIR/squashfs-root/opt $INSTALL_DIR
 
-echo "-----> Successfully extracted LibreOffice"
+# rm -rf "${TMP_DIR}"
 
-echo "-----> Set .profile.d"
+# echo "-----> Successfully extracted LibreOffice"
 
-PROFILE_PATH="$BUILD_DIR/.profile.d/libreoffice.sh"
-RUNTIME_INSTALL_PATH="\$HOME/libreoffice"
-mkdir -p $(dirname $PROFILE_PATH)
-INSTALLED_VERSION=$(ls $INSTALL_DIR/opt)
-echo "export PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION/program:\$PATH" >> $PROFILE_PATH
-echo "export OFFICE_PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION" >> $PROFILE_PATH
-echo "chmod 777 -R /app/libreoffice" >> $PROFILE_PATH
+# echo "-----> Set .profile.d"
 
-chmod +x $BUILD_DIR/.profile.d/libreoffice.sh
+# PROFILE_PATH="$BUILD_DIR/.profile.d/libreoffice.sh"
+# RUNTIME_INSTALL_PATH="\$HOME/libreoffice"
+# mkdir -p $(dirname $PROFILE_PATH)
+# INSTALLED_VERSION=$(ls $INSTALL_DIR/opt)
+# echo "export PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION/program:\$PATH" >> $PROFILE_PATH
+# echo "export OFFICE_PATH=$RUNTIME_INSTALL_PATH/opt/$INSTALLED_VERSION" >> $PROFILE_PATH
+# echo "chmod 777 -R /app/libreoffice" >> $PROFILE_PATH
+
+# chmod +x $BUILD_DIR/.profile.d/libreoffice.sh
 
 echo "-----> LibreOffice installation done"
