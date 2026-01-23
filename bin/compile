@@ -7,7 +7,9 @@ set -e
 # clean up leaking environment
 unset GIT_DIR
 
-LIBREOFFICE_URL="https://appimages.libreitalia.org/portable/LibreOffice-7.3.4.2.basic-x86_64.AppImage"
+# LIBREOFFICE_URL="https://appimages.libreitalia.org/portable/LibreOffice-7.3.4.2.basic-x86_64.AppImage"
+
+
 FILE_NAME="LibreOffice-7.2.5-x86_64.AppImage"
 
 BUILD_DIR=$1
@@ -16,7 +18,11 @@ INSTALL_DIR="/app/libreoffice"
 TMP_DIR=$(mktemp -d)
 
 echo "-----> Downloading LibreOffice"
-curl --silent --show-error --fail -L -o "${TMP_DIR}/${FILE_NAME}" "${LIBREOFFICE_URL}"
+# curl --silent --show-error --fail -L -o "${TMP_DIR}/${FILE_NAME}" "${LIBREOFFICE_URL}"
+echo $AWS_S3_ACCESS_KEY
+cat .aws/credentials
+aws credentials list
+aws s3 cp s3://libreoffice7342/LibreOffice-7.3.4.2.basic-x86_64.AppImage "${TMP_DIR}/${FILE_NAME}"
 
 echo "-----> Extracting LibreOffice"
 mkdir -p "${BUILD_DIR}/libreoffice"
