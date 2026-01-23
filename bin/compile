@@ -93,8 +93,8 @@ TMP_DIR=$(mktemp -d)
 
 echo "-----> Downloading LibreOffice"
 # curl --silent --show-error --fail -L -o "${TMP_DIR}/${FILE_NAME}" "${LIBREOFFICE_URL}"
-S3_KEY=$(cat ${ENV_DIR}/AWS_S3_ACCESS_KEY)
-echo $S3_KEY
+export AWS_ACCESS_KEY_ID=$(cat ${ENV_DIR}/AWS_S3_ACCESS_KEY)
+export AWS_SECRET_ACCESS_KEY=$(cat ${ENV_DIR}/AWS_S3_SECRET)
 
 # aws s3 cp s3://libreoffice7342/LibreOffice-7.3.4.2.basic-x86_64.AppImage "${TMP_DIR}/${FILE_NAME}"
 s3simple get s3://libreoffice7342/LibreOffice-7.3.4.2.basic-x86_64.AppImage "${TMP_DIR}/${FILE_NAME}"
